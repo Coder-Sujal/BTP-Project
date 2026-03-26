@@ -13,6 +13,8 @@ SOS = PROCESSED / "sos"
 TILES = PROCESSED / "tiles"
 DEM = PROCESSED / "dem"
 DEM.mkdir(parents=True, exist_ok=True)
+MASK = PROCESSED / "masks"
+MASK.mkdir(parents=True, exist_ok=True)
 
 # Results
 RESULTS = BASE_DIR / "result_images" / "data"
