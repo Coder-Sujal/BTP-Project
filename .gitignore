@@ -1,0 +1,112 @@
+# =========================
+
+# 🔹 DATA FILES (VERY LARGE)
+
+# =========================
+
+# Raw lunar data (NASA LOLA)
+
+raw_data/
+
+# Processed geospatial outputs
+
+processed/
+
+# Generated tiles / datasets
+
+kaggle_upload/
+
+
+# =========================
+
+# 🔹 GEO-SPATIAL FILES
+
+# =========================
+
+*.tif
+*.tiff
+*.img
+*.lbl
+*.vrt
+*.asc
+
+# =========================
+
+# 🔹 NUMPY / DATASETS
+
+# =========================
+
+*.npy
+*.npz
+*.csv
+
+# =========================
+
+# 🔹 MODEL FILES
+
+# =========================
+
+models/
+*.h5
+*.pth
+*.ckpt
+
+# =========================
+
+# 🔹 PYTHON CACHE
+
+# =========================
+
+**pycache**/
+*.pyc
+*.pyo
+*.pyd
+
+# =========================
+
+# 🔹 ENV / SYSTEM FILES
+
+# =========================
+
+.env
+.venv/
+venv/
+
+# Mac / Linux junk
+
+.DS_Store
+Thumbs.db
+
+# =========================
+
+# 🔹 JUPYTER
+
+# =========================
+
+.ipynb_checkpoints/
+
+# =========================
+
+# 🔹 VS CODE / IDE
+
+# =========================
+
+.vscode/
+.idea/
+
+# =========================
+
+# 🔹 KAGGLE CREDENTIALS (VERY IMPORTANT)
+
+# =========================
+
+kaggle.json
+~/.kaggle/
+
+# =========================
+
+# 🔹 LOG FILES
+
+# =========================
+
+*.log
