@@ -183,6 +183,56 @@ kaggle_upload/
 └── Y/
 ```
 
+### Step 7 — Dataset Integrity Check
+
+```bash
+python3 scripts/check_dataset_integrity.py \
+  --x-dir kaggle_upload/X \
+  --y-dir kaggle_upload/Y \
+  --output-json kaggle_upload/integrity_report.json
+```
+
+This validates:
+- Paired X/Y sample counts
+- Shape consistency
+- NaN/Inf checks
+- Binary mask values
+- Class balance (`mask_positive_ratio`)
+
+### Step 8 — Train/Val/Test Splits
+
+```bash
+python3 scripts/create_dataset_splits.py \
+  --x-dir kaggle_upload/X \
+  --y-dir kaggle_upload/Y \
+  --out-dir kaggle_upload/splits \
+  --strategy source \
+  --seed 42
+```
+
+Generated files:
+- `kaggle_upload/splits/manifest.csv`
+- `kaggle_upload/splits/train.txt`
+- `kaggle_upload/splits/val.txt`
+- `kaggle_upload/splits/test.txt`
+
+Note: if there are fewer than 3 source groups, the script falls back to sample-level split automatically.
+
+### Step 9 — TensorFlow Data Pipeline (Kaggle Training)
+
+Use `scripts/tf_dataset.py` in your Kaggle notebook to:
+- Load `manifest.csv`
+- Compute train-set normalization stats
+- Build `tf.data` datasets with augmentation (flip + rotate)
+
+Example smoke-check command:
+
+```bash
+python3 scripts/tf_dataset.py \
+  --manifest kaggle_upload/splits/manifest.csv \
+  --batch-size 16
+```
+
 ---
 
 ## 🧠 Kaggle Setup (GPU Training)
