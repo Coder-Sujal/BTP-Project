@@ -233,6 +233,97 @@ python3 scripts/tf_dataset.py \
   --batch-size 16
 ```
 
+### Step 10 — Build Path-Planning Costmap
+
+Build a traversability costmap from crater map + slope map:
+
+```bash
+python3 scripts/build_costmap.py \
+  --region 80s \
+  --inflation-radius-px 4 \
+  --crater-block-threshold 0.5 \
+  --w-dist 1.0 \
+  --w-crater 8.0 \
+  --w-slope 3.0 \
+  --w-clearance 2.0
+```
+
+Generated outputs:
+
+- `processed/path_planning/costmaps/costmap_80s.tif`
+- `processed/path_planning/blocked/blocked_80s.tif`
+- `processed/path_planning/meta/costmap_80s.json`
+
+### Step 11 — Run A* Route Planning
+
+Run A* between pixel start/goal points:
+
+```bash
+python3 scripts/plan_path.py \
+  --region 80s \
+  --start-row 200 --start-col 200 \
+  --goal-row 700 --goal-col 700 \
+  --allow-nearest-free
+```
+
+Generated outputs:
+
+- `processed/path_planning/routes/route_80s.tif`
+- `processed/path_planning/routes/route_80s.csv`
+- `processed/path_planning/meta/route_80s.json`
+
+### Step 12 — Visualize Planned Route
+
+```bash
+python3 scripts/visualize_route.py \
+  --region 80s \
+  --downsample 8
+```
+
+Output:
+
+- `result_images/data/route_overlay_80s.png`
+
+### Step 13 — Infer Crater Probability Tiles From Trained Model
+
+Run in the same environment family used to train/save the model (recommended: Kaggle runtime).
+
+```bash
+python3 scripts/infer_tiles.py \
+  --model models/best_model_v2.keras \
+  --x-dir kaggle_upload/X \
+  --out-dir processed/path_planning/pred_tiles \
+  --region 80s \
+  --batch-size 32
+```
+
+Outputs:
+
+- `processed/path_planning/pred_tiles/dem_<region>_<idx>.npy` (values in `[0,1]`)
+- `models/normalization_stats.json` (if not already present)
+
+### Step 14 — Stitch Probability Tiles Into Full Raster
+
+```bash
+python3 scripts/stitch_prob_map.py \
+  --region 80s \
+  --pred-dir processed/path_planning/pred_tiles \
+  --tile-size 256
+```
+
+Outputs:
+
+- `processed/path_planning/prob_maps/prob_80s.tif`
+- `processed/path_planning/meta/prob_80s.json`
+
+Then use predicted probabilities for planning:
+
+```bash
+python3 scripts/build_costmap.py \
+  --region 80s \
+  --crater-prob processed/path_planning/prob_maps/prob_80s.tif
+```
+
 ---
 
 ## 🧠 Kaggle Setup (GPU Training)
